@@ -7,6 +7,9 @@ In this file, we will learn about x86 Assembly written in Intel syntax. you can 
 
 - [Getting Started](#getting-started)
 - [Boot Sector Signature](#boot-sector-signature)
+- [Printing Character](#printing-character)
+- [Printing Uppercase Alphabet](#printing-uppercase-alphabet)
+- [Printing Alternatingcase Alphabet](#printing-alternatingcase-alphabet)
 
 ---
 
@@ -85,5 +88,89 @@ jmp $
 ; boot sector signature
 times 510 - ($-$$) db 0
 dw 0x55aa
+dw 0xaa55
+```
+
+---
+
+## Printing Character
+
+Below code, prints `!` on screen. you can replace the `!` with the any other character you want to print. But it should be in `ASCII` codes and Must be a single char.
+
+```nasm
+bits 16
+org 0x7c00
+
+mov ah, 0x0e ; teletype mode
+mov al, `!`  ; char to print
+int 0x10     ; bios interept
+
+jmp $
+times 510 - ($-$$) db 0
+dw 0xaa55
+```
+
+---
+
+## Printing Uppercase Alphabet
+
+Below code, prints `ABC....XYZ` on screen. we have essential create a loop in assembly that print complete alphabet (in uppercased).
+
+```nasm
+bits 16
+org 0x7c00
+
+mov ah, 0x0e ; teletype mode
+mov al, 64   ; init the al register
+
+print:
+    ; print the current alphabet character
+    inc al
+    int 0x10
+    
+    ; condition loop
+    cmp al, 'Z'
+    je quit
+    jmp print
+
+quit:
+    jmp $
+
+times 510 - ($-$$) db 0
+dw 0xaa55
+```
+
+---
+
+## Printing Alternatingcase Alphabet
+
+Below code, prints `AaBbCc....XxYyZz` on screen.
+
+```nasm
+bits 16
+org 0x7c00
+
+mov ah, 0x0e ; teletype mode
+mov al, 64
+
+print:
+    ; print the current uppercase alphabet character
+    inc al
+    int 0x10
+
+    ; print the current lowercase alphabet character
+    add al, 32
+    int 0x10
+    sub al, 32
+    
+    cmp al, 'Z'
+    je quit
+    jmp print
+
+quit:
+    jmp $
+
+times 510 - ($-$$) db 0
+dw 0xaa55
 ```
 
