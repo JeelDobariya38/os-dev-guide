@@ -10,6 +10,7 @@ In this file, we will learn about x86 Assembly written in Intel syntax. you can 
 - [Printing Character](#printing-character)
 - [Printing Uppercase Alphabet](#printing-uppercase-alphabet)
 - [Printing Alternatingcase Alphabet](#printing-alternatingcase-alphabet)
+- [Printing Strings](#printing-strings)
 
 ---
 
@@ -87,7 +88,6 @@ jmp $
 
 ; boot sector signature
 times 510 - ($-$$) db 0
-dw 0x55aa
 dw 0xaa55
 ```
 
@@ -174,3 +174,32 @@ times 510 - ($-$$) db 0
 dw 0xaa55
 ```
 
+---
+
+## Printing Strings
+
+Below code, prints the string `Hello, World!!!` on screen.
+
+```nasm
+org 0x7c00
+
+mov ah, 0x0e ; teletype mode
+mov bx, data ; init the bl register
+
+print:
+    mov al, [bx]
+    cmp al, 0
+    je quit
+    int 0x10
+    inc bx
+    jmp print
+
+quit:
+    jmp $
+
+data:
+    db 'Hello, World!!!', 0
+
+times 510 - ($-$$) db 0
+dw 0xaa55
+```
