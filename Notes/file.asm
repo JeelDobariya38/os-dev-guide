@@ -1,22 +1,14 @@
 bits 16
 org 0x7c00
 
-mov ah, 0x0e ; teletype mode
-mov bx, data ; init the bl register
+mov ah, 0x00
+int 0x16 ; input a char
 
-print:
-    mov al, [bx]
-    cmp al, 0
-    je quit
-    int 0x10
-    inc bx
-    jmp print
+mov ah, 0x0e
+int 0x10
 
-quit:
-    jmp $
-
-data:
-    db "My Simple OS!!!", 0
+jmp $
 
 times 510 - ($-$$) db 0
 dw 0xaa55
+

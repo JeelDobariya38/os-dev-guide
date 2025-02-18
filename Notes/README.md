@@ -204,3 +204,27 @@ data:
 times 510 - ($-$$) db 0
 dw 0xaa55
 ```
+
+---
+
+## User Input (just a character)
+
+Below code, is used to take the input from user. It take single char as input and print on screen.
+
+```nasm
+bits 16
+org 0x7c00
+
+; input a char from user and store it ascii code in al
+mov ah, 0x00
+int 0x16
+
+; print it on screen
+mov ah, 0x0e
+int 0x10
+
+jmp $
+
+times 510 - ($-$$) db 0
+dw 0xaa55
+```
