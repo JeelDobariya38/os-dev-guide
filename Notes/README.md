@@ -209,7 +209,7 @@ dw 0xaa55
 
 ## User Input (just a character)
 
-Below code, is used to take the input from user. It take single char as input and print on screen.
+Below code, is used to take the input from user. It take single char as input and print it on screen.
 
 ```nasm
 bits 16
@@ -224,6 +224,45 @@ mov ah, 0x0e
 int 0x10
 
 jmp $
+
+times 510 - ($-$$) db 0
+dw 0xaa55
+```
+
+---
+
+## User Input (a whole string)
+
+Below code, is used to take the input (string) from user. It read the character inputed and print it on screen utill user print enter key (return key).
+
+```nasm
+bits 16
+org 0x7c00
+
+mov ah, 0x0e
+
+mov al, '>'
+int 0x10
+
+mov al, ' '
+int 0x10
+
+read_str:
+    ; read a char
+    mov ah, 0x00
+    int 0x16
+    
+    ; exit if its return key
+    cmp al, 13
+    je quit
+    
+    ; print char
+    mov ah, 0x0e
+    int 0x10
+    jmp read_str
+
+quit:
+    jmp $
 
 times 510 - ($-$$) db 0
 dw 0xaa55
