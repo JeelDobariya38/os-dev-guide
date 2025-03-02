@@ -1,31 +1,19 @@
 ASM=nasm
 
 
-all: clean build
+all: clean test
 
 
-build: os.img
-
-
-release: os.iso
-
-
-debug: os.img
+test: main.bin
 	qemu-system-x86_64 -hda $^
 
 
-test: os.iso
-	qemu-system-x86_64 dist/os.iso
+build: clean dist/os.img
 
 
-os.iso: main.bin
-	cp $^ iso/boot/os.bin
-	grub-mkrescue -o dist/os.iso iso/ --modules="biosdisk part_msdos" --directory=/usr/lib/grub/i386-pc
-
-
-os.img: main.bin
+dist/os.img: main.bin
 	cp $^ $@
-	truncate -s 1440k $@
+	truncate -s 4k $@
 
 
 main.bin: main.asm
@@ -33,5 +21,5 @@ main.bin: main.asm
 
 
 clean:
-	rm -f os.img main.bin iso/os.bin dist/os.iso
+	rm -f dist/os.img main.bin
 
